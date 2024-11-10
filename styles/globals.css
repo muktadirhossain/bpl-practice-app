@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .date {
+    @apply text-sm text-amber-500 hover:text-durbarDeep;
+  }
+  .primary-btn {
+    @apply text-black font-semibold bg-gradient-to-b from-durbarDeep to-durbarLight;
+  }
+  .gradient-text {
+    @apply bg-gradient-to-b from-durbarDeep to-durbarLight bg-clip-text text-transparent;
+  }
+  .section-title {
+    @apply capitalize w-full font-semibold from-[#F58B1E] to-[#F1D848] text-[2.3rem] lg:text-5xl bg-clip-text text-center block text-transparent bg-gradient-to-b z-20 mb-1 leading-extra-loose;
+  }
+  .section-subtitle {
+    @apply text-center capitalize text-durbarDeep font-semibold text-xl sm:text-3xl z-10;
+  }
+
+  .after-gradient {
+    position: relative;
+  }
+
+  .after-gradient::after {
+    content: "";
+    @apply absolute h-[15%] w-full bottom-0 left-0 pointer-events-none;
+    background: linear-gradient(0deg, #f5891ea2, transparent);
+    z-index: 30;
+  }
+  .after-right-border {
+    position: relative;
+  }
+
+  .after-right-border::after {
+    content: "";
+    @apply absolute top-0 right-0 h-full w-[2px] bg-gray-500; /* Adjust width and color as needed */
+  }
+
+  .bg-one{
+    position: relative;
+    z-index: 10;
+  }
+  .bg-one::after {
+    content: "";
+    @apply absolute right-0 bottom-0 h-[80%] -z-10 w-full bg-gray-500/50 rounded-tr-large;
+  }
+
+}
+
+/* !SCROLL BAR STYLES:: */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f58b1e; /* Customize the color */
+  border-radius: 6px; /* Optionally round the corners */
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(69, 69, 69, 0.3); /* Customize the track color */
+}
+
+.jodit-status-bar-link {
+  display: none;
+}
+
+.test-blur::after {
+  content: "";
+  width: 100%;
+}

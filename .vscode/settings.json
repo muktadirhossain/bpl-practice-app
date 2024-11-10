@@ -1,0 +1,9 @@
+{
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": [
+    "connectdb",
+    "durbar",
+    "superadmin"
+  ],
+}

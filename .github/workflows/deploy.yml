@@ -1,0 +1,95 @@
+# name: Deploy to VPS
+
+# on:
+#   push:
+#     branches:
+#       - main  # This will run the action on each push to the 'main' branch
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Install Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '20'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build Next.js app
+#         env:
+#           SSH_HOST: ${{ secrets.SSH_HOST }}
+#           SSH_USER: ${{ secrets.SSH_USER }}
+#           SSH_KEY: ${{ secrets.SSH_KEY }}
+#           APP_DIRECTORY: "/home/durbar-rajshahi"
+#           DB_NAME: ${{ secrets.DB_NAME }}
+#           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+#           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+#           AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+#           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+#           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+#           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+#         run: npm run build
+
+#       - name: Check environment variables
+#         run: |
+#           echo "SSH_HOST=$SSH_HOST"
+#           echo "SSH_USER=$SSH_USER"
+
+#       - name: Test SSH Connection
+#         env:
+#           SSH_HOST: ${{ secrets.SSH_HOST }}
+#           SSH_USER: ${{ secrets.SSH_USER }}
+#           SSH_KEY: ${{ secrets.SSH_KEY }}
+#         run: |
+#           echo "$SSH_KEY" > private_key.pem
+#           chmod 600 private_key.pem
+#           ssh -i private_key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "echo 'SSH connection successful'"
+#           rm private_key.pem
+
+#       - name: Copy files to VPS
+#         env:
+#           SSH_HOST: ${{ secrets.SSH_HOST }}
+#           SSH_USER: ${{ secrets.SSH_USER }}
+#           SSH_KEY: ${{ secrets.SSH_KEY }}
+#           APP_DIRECTORY: "/home/durbar-rajshahi"
+#         run: |
+#           echo "$SSH_KEY" > private_key.pem
+#           chmod 600 private_key.pem
+#           rsync -avz -vvv -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" \
+#             --exclude=node_modules --exclude=.git ./ $SSH_USER@$SSH_HOST:$APP_DIRECTORY
+#           rm private_key.pem
+
+#       - name: Restart Application with PM2
+#         env:
+#           SSH_HOST: ${{ secrets.SSH_HOST }}
+#           SSH_USER: ${{ secrets.SSH_USER }}
+#           SSH_KEY: ${{ secrets.SSH_KEY }}
+#           APP_DIRECTORY: "/home/durbar-rajshahi"
+#           DB_NAME: ${{ secrets.DB_NAME }}
+#           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+#           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+#           AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+#           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+#           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+#           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+#         run: |
+#           echo "$SSH_KEY" > private_key.pem
+#           chmod 600 private_key.pem
+#           ssh -i private_key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
+#             cd $APP_DIRECTORY
+#             export DB_NAME=$DB_NAME
+#             export MONGODB_URI=$MONGODB_URI
+#             export YOUTUBE_API_KEY=$YOUTUBE_API_KEY
+#             export AUTH_TRUST_HOST=$AUTH_TRUST_HOST
+#             export AUTH_SECRET=$AUTH_SECRET
+#             export GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+#             export GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+#             pm2 restart app || pm2 start npm --name "durbar-rajshahi" -- start
+#           EOF
+#           rm private_key.pem
